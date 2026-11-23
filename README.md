@@ -52,6 +52,15 @@ FastAPI + SQLite backend (port **8001**), React frontend, Docker, GitHub Actions
 
 All of these were tested on the EC2 deployment.
 
+## Database
+
+One SQLite file, `feedback.db`, with two tables:
+
+| Table | Columns |
+|---|---|
+| `users` | `id`, `username`, `email` (unique), `hashed_password`, `created_at` |
+| `feedback` | `id`, `user_id` (→ `users.id`), `subject`, `message`, `rating` (1–5), `created_at` |
+
 ## Project structure
 
 ```
@@ -60,21 +69,66 @@ frontend/    React app: src/App.jsx, src/components/Register.jsx, Login.jsx, Das
 .github/workflows/deploy.yml   CI/CD to Docker Hub and EC2
 ```
 
-## Run locally
+## How to run it (fresh laptop)
 
-Backend (http://127.0.0.1:8001/docs):
+Needs Git, Python 3.12, Node.js and Docker Desktop.
+
+```
+git clone https://github.com/nandakishoreraju16-lab/feedback-manager.git
+cd feedback-manager
+```
+
+**Backend** (http://127.0.0.1:8001/docs):
+```
+cd backend
+pip install -r requirements.txt
+uvicorn main:app --port 8001
+```
+
+**Backend in a Docker container** (instead of the step above):
 ```
 cd backend
 docker build -t feedback-api -f dockerfile .
 docker run -d --name feedback-local -p 8001:8001 feedback-api
 ```
 
-Frontend (http://localhost:5173):
+**Frontend** (http://localhost:5173, needs the backend running on port 8001):
 ```
 cd frontend
 npm install
 npm run dev
 ```
+
+## Screenshots
+
+![Registration](screenshots/1-register.png)
+Registration page: a new user signs up.
+
+![Login](screenshots/2-login.png)
+Login page: email and password, tokens are stored after login.
+
+![Dashboard](screenshots/3-dashboard.png)
+Feedback Dashboard: the user's feedback loads automatically after login.
+
+![Error message](screenshots/4-error.png)
+Error on screen: registering the same email again shows "Email already registered" (409).
+
+![Endpoint in /docs](screenshots/5-docs.png)
+POST /feedback working in /docs on the EC2 link (201 Created).
+
+![GitHub Actions](screenshots/6-actions.png)
+Green GitHub Actions run: build, push to Docker Hub, deploy to EC2.
+
+## Known issues
+
+- The email check is basic: it only checks for `@` and a `.` after it.
+- The frontend's `API_URL` is `http://127.0.0.1:8001`, so the frontend needs the backend running on the same laptop.
+- The EC2 public IP changes if the instance is stopped and started; the `EC2_HOST` secret then has to be updated.
+
+With more time we would add:
+- A submit-feedback form on the dashboard (the bonus feature)
+- Editing and deleting feedback
+- HTTPS and a domain name for the EC2 app
 
 ## GitHub Actions secrets
 
