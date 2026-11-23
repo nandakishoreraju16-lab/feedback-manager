@@ -4,6 +4,10 @@ FastAPI + SQLite backend (port **8001**), React frontend, Docker, GitHub Actions
 
 **Live API (EC2):** http://13.203.76.211:8001/docs
 
+## Video
+
+Demo video: https://drive.google.com/file/d/1eOrURdSE1a4DOtHmoKfxJj1ZGyONn1un/view
+
 ## Team 15 · Mini Project 5
 
 | Member | Role |
