@@ -38,11 +38,12 @@ jobs:
             set -e
             sudo systemctl enable --now docker
             # feedback.db lives here on EC2, so data survives every redeploy
-            mkdir -p /home/ec2-user/feedback-data
+            sudo mkdir -p /opt/feedback/data
             sudo docker pull ${{ env.IMAGE }}:${{ env.VERSION }}
             sudo docker rm -f feedback-api || true
             sudo docker run -d --name feedback-api --restart unless-stopped \
               -p 8001:8001 \
-              -v /home/ec2-user/feedback-data:/app/data \
+              -v /opt/feedback/data:/app/data \
+              -e SECRET_KEY="${{ secrets.JWT_SECRET_KEY }}" \
               ${{ env.IMAGE }}:${{ env.VERSION }}
             sudo docker ps --filter name=feedback-api
