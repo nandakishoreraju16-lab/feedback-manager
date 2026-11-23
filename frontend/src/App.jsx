@@ -5,12 +5,6 @@ import Dashboard from "./components/Dashboard";
 
 const API_URL = "http://127.0.0.1:8001";
 
-// FastAPI sends "detail" as text, or as a list when Pydantic finds a 422 problem
-function errorText(data) {
-  if (typeof data.detail === "string") return data.detail;
-  return data.detail[0].msg;
-}
-
 function App() {
   const [page, setPage] = useState("register");
   const [message, setMessage] = useState("");
@@ -39,7 +33,7 @@ function App() {
       .then((response) => response.json().then((data) => ({ ok: response.ok, data: data })))
       .then((result) => {
         if (!result.ok) {
-          setMessage(errorText(result.data));
+          setMessage("Error: " + JSON.stringify(result.data.detail));
           return;
         }
         setPage("login");                                   // success -> go to login
@@ -57,7 +51,7 @@ function App() {
       .then((response) => response.json().then((data) => ({ ok: response.ok, data: data })))
       .then((result) => {
         if (!result.ok) {
-          setMessage(errorText(result.data));
+          setMessage("Error: " + JSON.stringify(result.data.detail));
           return;
         }
         localStorage.setItem("access_token", result.data.access_token);
@@ -79,7 +73,7 @@ function App() {
           return;
         }
         if (result.status !== 200) {
-          setMessage(errorText(result.data));
+          setMessage("Error: " + JSON.stringify(result.data.detail));
           return;
         }
         setFeedback(result.data);

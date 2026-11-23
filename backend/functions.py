@@ -9,15 +9,15 @@ from argon2.exceptions import VerifyMismatchError
 
 ph = PasswordHasher()
 
-# feedback.db is kept inside the data folder so EC2 can keep it after redeploy
-os.makedirs("data", exist_ok=True)
-DB_PATH = "data/feedback.db"
-engine = create_engine(f"sqlite:///{DB_PATH}")
+# /app/data is mounted from /opt/feedback/data on EC2, so feedback.db survives redeploys
+os.makedirs("/app/data", exist_ok=True)
+DB_URL = "sqlite:////app/data/feedback.db"
+engine = create_engine(DB_URL)
 Base = declarative_base()
 
 ACCESS_TOKEN_EXPIRY = 30 #mins
 REFRESH_TOKEN_EXPIRY = 7 * 24 * 60 #mins
-SECRET_KEY = "SECRET123"
+SECRET_KEY = os.getenv("SECRET_KEY", "SECRET123")  # on EC2 it comes from the GitHub secret JWT_SECRET_KEY
 ALGORITHM = "HS256"
 
 class User(Base):
