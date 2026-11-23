@@ -3,5 +3,4 @@ uvicorn[standard]
 sqlalchemy
 pyjwt
 argon2-cffi
-pytest
 
