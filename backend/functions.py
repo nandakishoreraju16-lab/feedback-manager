@@ -107,3 +107,13 @@ def get_feedback(user_id):
         result.append({"id": f.id, "subject": f.subject, "message": f.message, "rating": f.rating, "created_at": f.created_at})
     session.close()
     return result
+
+
+def add_feedback(user_id, subject, message, rating):
+    session = Session(engine)
+    feedback = Feedback(user_id=user_id, subject=subject, message=message, rating=rating)
+    session.add(feedback)
+    session.commit()
+    result = {"id": feedback.id, "subject": feedback.subject, "message": feedback.message, "rating": feedback.rating, "created_at": feedback.created_at}
+    session.close()
+    return result
