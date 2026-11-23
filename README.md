@@ -22,7 +22,7 @@ FastAPI + SQLite backend (port **8001**), React frontend, Docker, GitHub Actions
 
 | # | What it does | Method | Path | Request body | Success code |
 |---|---|---|---|---|---|
-| A1 | Register a new user | POST | `/register` | `{username, email, password}` | 201 |
+| A1 | Register a new user | POST | `/register` | `{username, email, password}` | 200 |
 | A2 | Login, get access + refresh tokens | POST | `/login` | `{email, password}` | 200 |
 | A3 | New access token from refresh token | POST | `/refresh` | `{refresh_token}` | 200 |
 | E1 | Get my feedback | GET | `/feedback` | – (header `Authorization: Bearer <access_token>`) | 200 |
