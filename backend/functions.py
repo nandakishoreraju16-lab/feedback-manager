@@ -82,3 +82,18 @@ def verify_token(token, token_type):
     if payload["token_type"] == token_type:
         return payload["user_id"]
     return False# hey there, database and login helpers coming up next
+
+
+def register_user(username, email, password):
+    session = Session(engine)
+    user_existing = session.query(User).filter_by(email=email).first()
+    if user_existing is not None:
+        session.close()
+        return False
+
+    user = User(username=username, email=email, hashed_password=ph.hash(password))
+    session.add(user)
+    session.commit()
+    result = {"id": user.id, "username": user.username, "email": user.email, "created_at": user.created_at}
+    session.close()
+    return result
