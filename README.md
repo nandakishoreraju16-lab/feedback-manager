@@ -8,7 +8,7 @@ FastAPI + SQLite backend (port **8001**), React frontend, Docker, GitHub Actions
 |---|---|
 | Nanda Kishore | Team lead |
 | Yashwanth | Developer |
-| Abhishek | Developer |
+| Abhishek N| Developer |
 
 ## Work distribution
 
